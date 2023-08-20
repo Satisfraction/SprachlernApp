@@ -27,7 +27,7 @@ Du kannst das Programm jederzeit beenden, indem du die entsprechende Option ausw
 Das Vokabular wird in der Datei `vocab.json` gespeichert. Du kannst diese Datei bearbeiten, um das Vokabular anzupassen. Füge einfach neue Vokabeln hinzu oder ändere bestehende Übersetzungen.
 
 ## 100 Days of Code Techstarter
-Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es dient dazu, deine Programmierfähigkeiten zu verbessern und kontinuierlich an Projekten zu arbeiten.
+Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es dient dazu, meine Programmierfähigkeiten zu verbessern und kontinuierlich an Projekten zu arbeiten.
 
 ## License
 
