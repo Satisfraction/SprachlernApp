@@ -14,8 +14,21 @@
     "Tisch": "table",
     "Vogel": "bird",
     "Blume": "flower",
-    "Löwe": "lion",
+    "L\u00c3\u00b6we": "lion",
     "Elefant": "elephant",
     "Sonne": "sun",
-    "Mond": "moon"
+    "Mond": "moon",
+    "Himmel": "sky",
+    "Wasser": "water",
+    "Feuer": "fire",
+    "Eis": "ice",
+    "Wind": "wind",
+    "Erde": "earth",
+    "Luft": "air",
+    "Stein": "stone",
+    "Gold": "gold",
+    "Silber": "silver",
+    "Zeit": "time",
+    "Wald": "forest",
+    "geld": "money"
 }
