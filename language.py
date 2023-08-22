@@ -13,6 +13,8 @@ def language_learning_app(vocab):
     keys = list(vocab.keys())
     random.shuffle(keys)
 
+    count = 0  # Counter for number of words learned
+
     for word in keys:
         print("Übersetze das Wort: ", word)
         user_input = input("Gib deine Übersetzung auf Englisch ein: ")
@@ -21,6 +23,13 @@ def language_learning_app(vocab):
             print("Richtig!")
         else:
             print("Falsch. Die korrekte Übersetzung lautet:", vocab[word])
+
+        count += 1  # Increment the counter
+
+        if count % 5 == 0:  # Check if 5 words have been learned
+            choice = input("Möchtest du weiterlernen? (ja/nein): ")
+            if choice.lower() == "nein":
+                break
 
 def add_vocabulary(vocab):
     word = input("Gib das Wort ein: ")
