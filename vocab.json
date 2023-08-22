@@ -3,7 +3,7 @@
     "Banane": "banana",
     "Katze": "cat",
     "Hund": "dog",
-    "hallo": "hello",
+    "Hallo": "hello",
     "auf Wiedersehen": "goodbye",
     "Maus": "mouse",
     "Schule": "school",
@@ -14,7 +14,7 @@
     "Tisch": "table",
     "Vogel": "bird",
     "Blume": "flower",
-    "L\u00c3\u00b6we": "lion",
+    "Löwe": "lion",
     "Elefant": "elephant",
     "Sonne": "sun",
     "Mond": "moon",
@@ -30,5 +30,5 @@
     "Silber": "silver",
     "Zeit": "time",
     "Wald": "forest",
-    "geld": "money"
+    "Geld": "money"
 }
