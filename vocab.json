@@ -14,7 +14,7 @@
     "Tisch": "table",
     "Vogel": "bird",
     "Blume": "flower",
-    "Löwe": "lion",
+    "L\u00c3\u00b6we": "lion",
     "Elefant": "elephant",
     "Sonne": "sun",
     "Mond": "moon",
@@ -30,5 +30,6 @@
     "Silber": "silver",
     "Zeit": "time",
     "Wald": "forest",
-    "Geld": "money"
+    "Geld": "money",
+    "Arbeit": "work"
 }
