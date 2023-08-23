@@ -1,22 +1,23 @@
 import random
 import json
 
-def load_vocab(file):
-    with open(file, 'r') as f:
-        return json.load(f)
+class Vocabulary:
+    @classmethod
+    def load(cls, file):
+        with open(file, 'r') as f:
+            return json.load(f)
 
-def save_vocab(file, vocab):
-    with open(file, 'w') as f:
-        json.dump(vocab, f, indent=4)
+    @classmethod
+    def save(cls, file, vocab):
+        with open(file, 'w') as f:
+            json.dump(vocab, f, indent=4)
 
 def language_learning_app(vocab):
     keys = list(vocab.keys())
     random.shuffle(keys)
 
-    count = 0  # Counter for number of words learned
-
-    for word in keys:
-        print("Übersetze das Wort: ", word)
+    for count, word in enumerate(keys):
+        print(f"Übersetze das Wort: {word}")
         user_input = input("Gib deine Übersetzung auf Englisch ein: ")
 
         if user_input.lower() == vocab[word].lower():
@@ -24,9 +25,7 @@ def language_learning_app(vocab):
         else:
             print("Falsch. Die korrekte Übersetzung lautet:", vocab[word])
 
-        count += 1  # Increment the counter
-
-        if count % 5 == 0:  # Check if 5 words have been learned
+        if (count + 1) % 5 == 0:  # Check if 5 words have been learned
             choice = input("Möchtest du weiterlernen? (ja/nein): ")
             if choice.lower() == "nein":
                 break
@@ -36,14 +35,13 @@ def add_vocabulary(vocab):
     translation = input("Gib die Übersetzung auf Englisch ein: ")
 
     vocab[word] = translation
-    save_vocab("vocab.json", vocab)
+    Vocabulary.save("vocab.json", vocab)
 
     print("Vokabel erfolgreich hinzugefügt.")
 
-
 def main():
     vocab_file = "vocab.json"
-    vocab = load_vocab(vocab_file)
+    vocab = Vocabulary.load(vocab_file)
 
     while True:
         print("1. Lernen starten")
