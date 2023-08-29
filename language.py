@@ -16,12 +16,14 @@ class Vocabulary:
         with open(file, 'w') as f:
             json.dump(vocab, f, indent=4)
 
+
 class LanguageLearningApp(QWidget):
     def __init__(self, vocab):
         super().__init__()
         self.vocab = vocab
-        self.keys = list(vocab.keys())
+        self.keys = set(vocab.keys())
         self.current_word = None
+        self.current_translation = None
         self.init_ui()
 
     def init_ui(self):
@@ -50,17 +52,19 @@ class LanguageLearningApp(QWidget):
         self.load_next_word()
 
     def load_next_word(self):
-        self.current_word = random.choice(self.keys)
+        self.current_word = random.choice(list(self.keys))
         self.word_label.setText(f"Übersetze das Wort: {self.current_word}")
         self.translation_input.clear()
         self.result_label.clear()
+        self.current_translation = self.vocab[self.current_word]
 
     def check_translation(self):
         user_input = self.translation_input.text()
-        if user_input.lower() == self.vocab[self.current_word].lower():
+        if user_input.lower() == self.current_translation.lower():
             self.result_label.setText("Richtig!")
         else:
-            self.result_label.setText(f"Falsch. Die korrekte Übersetzung lautet: {self.vocab[self.current_word]}")
+            self.result_label.setText(f"Falsch. Die korrekte Übersetzung lautet: {self.current_translation}")
+
 
 class VocabularyApp(QWidget):
     def __init__(self, vocab):
@@ -70,22 +74,22 @@ class VocabularyApp(QWidget):
 
     def init_ui(self):
         self.layout = QVBoxLayout()
-    
+
         self.learn_button = QPushButton("Lernen starten")
         self.learn_button.setShortcut(QKeySequence("Ctrl+L"))  # Tastaturkürzel Ctrl+L
         self.learn_button.clicked.connect(self.start_learning)
         self.layout.addWidget(self.learn_button)
-    
+
         self.add_button = QPushButton("Neue Vokabel hinzufügen")
         self.add_button.clicked.connect(self.add_vocabulary)
         self.layout.addWidget(self.add_button)
-    
+
         self.quit_button = QPushButton("Beenden")
         self.quit_button.clicked.connect(self.close)
         self.layout.addWidget(self.quit_button)
-    
+
         self.setLayout(self.layout)
-    
+
         # Set the size of the main window
         self.resize(450, 200)
 
@@ -108,6 +112,7 @@ class VocabularyApp(QWidget):
                 return word, translation
         return None, None
 
+
 def main():
     app = QApplication(sys.argv)
     vocab_file = "vocab.json"
@@ -117,5 +122,7 @@ def main():
     vocab_app.show()
     sys.exit(app.exec_())
 
+
 if __name__ == "__main__":
     main()
+
