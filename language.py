@@ -7,13 +7,15 @@ from PyQt5.QtGui import QKeySequence
 
 class Vocabulary:
     @classmethod
-    def load(cls, file):
-        with open(file, 'r') as f:
+    def load(cls, filename):
+        """Load vocabulary from a JSON file."""
+        with open(filename, 'r') as f:
             return json.load(f)
 
     @classmethod
-    def save(cls, file, vocab):
-        with open(file, 'w') as f:
+    def save(cls, filename, vocab):
+        """Save vocabulary to a JSON file."""
+        with open(filename, 'w') as f:
             json.dump(vocab, f, indent=4)
 
 
@@ -21,7 +23,7 @@ class LanguageLearningApp(QWidget):
     def __init__(self, vocab):
         super().__init__()
         self.vocab = vocab
-        self.keys = set(vocab.keys())
+        self.words = set(vocab.keys())
         self.current_word = None
         self.current_translation = None
         self.init_ui()
@@ -34,13 +36,13 @@ class LanguageLearningApp(QWidget):
 
         self.translation_input = QLineEdit()
         self.layout.addWidget(self.translation_input)
-        self.translation_input.setFocus()  # Setze automatisch den Fokus auf das Eingabefeld
+        self.translation_input.setFocus()
 
         self.result_label = QLabel()
         self.layout.addWidget(self.result_label)
 
         self.check_button = QPushButton("Überprüfen")
-        self.check_button.setDefault(True)  # Aktiviere Schaltfläche mit der Eingabetaste
+        self.check_button.setDefault(True)
         self.check_button.clicked.connect(self.check_translation)
         self.layout.addWidget(self.check_button)
 
@@ -52,7 +54,7 @@ class LanguageLearningApp(QWidget):
         self.load_next_word()
 
     def load_next_word(self):
-        self.current_word = random.choice(list(self.keys))
+        self.current_word = random.choice(list(self.words))
         self.word_label.setText(f"Übersetze das Wort: {self.current_word}")
         self.translation_input.clear()
         self.result_label.clear()
@@ -76,7 +78,7 @@ class VocabularyApp(QWidget):
         self.layout = QVBoxLayout()
 
         self.learn_button = QPushButton("Lernen starten")
-        self.learn_button.setShortcut(QKeySequence("Ctrl+L"))  # Tastaturkürzel Ctrl+L
+        self.learn_button.setShortcut(QKeySequence("Ctrl+L"))  # Keyboard shortcut Ctrl+L
         self.learn_button.clicked.connect(self.start_learning)
         self.layout.addWidget(self.learn_button)
 
@@ -90,7 +92,6 @@ class VocabularyApp(QWidget):
 
         self.setLayout(self.layout)
 
-        # Set the size of the main window
         self.resize(450, 200)
 
     def start_learning(self):
@@ -102,7 +103,6 @@ class VocabularyApp(QWidget):
         if word and translation:
             self.vocab[word] = translation
             Vocabulary.save("vocab.json", self.vocab)
-            print("Vokabel erfolgreich hinzugefügt.")
 
     def get_new_vocabulary(self):
         word, ok = QInputDialog.getText(self, "Neue Vokabel hinzufügen", "Gib das Wort ein:")
