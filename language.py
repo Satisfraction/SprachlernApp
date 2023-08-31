@@ -17,6 +17,14 @@ class Vocabulary:
         """Save vocabulary to a JSON file."""
         with open(filename, 'w') as f:
             json.dump(vocab, f, indent=4)
+            
+def get_random_word(vocab):
+    """Return a random word from the vocabulary."""
+    return random.choice(list(vocab.keys()))
+
+def check_translation_case_insensitive(user_input, correct_translation):
+    """Check if the user input matches the correct translation, ignoring case."""
+    return user_input.lower() == correct_translation.lower()
 
 
 class LanguageLearningApp(QWidget):
@@ -54,7 +62,7 @@ class LanguageLearningApp(QWidget):
         self.load_next_word()
 
     def load_next_word(self):
-        self.current_word = random.choice(list(self.words))
+        self.current_word = get_random_word(self.vocab)
         self.word_label.setText(f"Übersetze das Wort: {self.current_word}")
         self.translation_input.clear()
         self.result_label.clear()
@@ -62,7 +70,7 @@ class LanguageLearningApp(QWidget):
 
     def check_translation(self):
         user_input = self.translation_input.text()
-        if user_input.lower() == self.current_translation.lower():
+        if check_translation_case_insensitive(user_input, self.current_translation):
             self.result_label.setText("Richtig!")
         else:
             self.result_label.setText(f"Falsch. Die korrekte Übersetzung lautet: {self.current_translation}")
@@ -125,4 +133,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
