@@ -6,7 +6,11 @@ Die Sprachlern-App ist ein einfaches Python-Programm, das dazu dient, Vokabeln i
 ## Inhaltsverzeichnis
 - [Verwendung](#verwendung)
 - [Funktionen](#funktionen)
+  - [Lernmodus](#lernmodus)
+  - [Zurück-Button](#zurück-button)
+  - [Beenden-Button](#beenden-button)
 - [Anpassung des Vokabulars](#anpassung-des-vokabulars)
+- [Tastenkürzel](#tastenkürzel)
 - [100 Days of Code Techstarter](#100-days-of-code-techstarter)
 - [Lizenz](#license)
 
@@ -21,14 +25,24 @@ Um die Sprachlern-App zu verwenden, folge diesen Schritten:
 ## Funktionen
 Die Sprachlern-App bietet die folgenden Funktionen:
 
-1. **Vokabeln lernen**: Du kannst den Lernmodus für Vokabeln starten, in dem dir zufällige Vokabeln angezeigt werden. Du wirst aufgefordert, die Übersetzung des gezeigten Wortes einzugeben. Wenn deine Eingabe korrekt ist, erhältst du eine Bestätigung. Andernfalls wird dir die richtige Übersetzung angezeigt.
+### Lernmodus
+- **Vokabeln lernen**: Du kannst den Lernmodus für Vokabeln starten, in dem dir zufällige Vokabeln angezeigt werden. Du wirst aufgefordert, die Übersetzung des gezeigten Wortes einzugeben. Wenn deine Eingabe korrekt ist, erhältst du eine Bestätigung. Andernfalls wird dir die richtige Übersetzung angezeigt.
 
-2. **Sätze lernen**: Du kannst den Lernmodus für Sätze starten, in dem dir zufällige Sätze angezeigt werden. Du wirst aufgefordert, die Übersetzung des gezeigten Satzes einzugeben. Wenn deine Eingabe korrekt ist, erhältst du eine Bestätigung. Andernfalls wird dir die richtige Übersetzung angezeigt.
+- **Sätze lernen**: Du kannst den Lernmodus für Sätze starten, in dem dir zufällige Sätze angezeigt werden. Du wirst aufgefordert, die Übersetzung des gezeigten Satzes einzugeben. Wenn deine Eingabe korrekt ist, erhältst du eine Bestätigung. Andernfalls wird dir die richtige Übersetzung angezeigt.
 
-3. **Beenden**: Du kannst das Programm jederzeit beenden, indem du die entsprechende Option auswählst.
+### Zurück-Button
+- **Zurück-Button**: Du kannst den Zurück-Button verwenden, um zwischen dem Lernen von Vokabeln und dem Lernen von Sätzen zu wechseln. Dies ermöglicht es dir, deine Lernmethode anzupassen und flexibel zwischen den Modi zu wechseln.
+
+### Beenden-Button
+- **Beenden-Button**: Du kannst das Programm jederzeit beenden, indem du die entsprechende Option auswählst.
 
 ## Anpassung des Vokabulars
 Das Vokabular wird in einer SQLite-Datenbankdatei gespeichert. Du kannst diese Datenbankdatei bearbeiten, um das Vokabular anzupassen. Füge einfach neue Vokabeln oder Sätze hinzu oder ändere bestehende Übersetzungen direkt in der Datenbank.
+
+## Tastenkürzel
+Die Sprachlern-App unterstützt Tastenkürzel für eine schnellere Bedienung:
+- Drücke `Enter`, um die Eingabe zu überprüfen.
+- Drücke `F2`, um das nächste Element zu laden.
 
 ## 100 Days of Code Techstarter
 Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es dient dazu, meine Programmierfähigkeiten zu verbessern und kontinuierlich an Projekten zu arbeiten.
@@ -37,3 +51,7 @@ Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es 
 Dieses Projekt ist lizenziert unter der [MIT License](LICENSE).
 
 **Viel Spaß beim Lernen mit der Sprachlern-App!**
+
+
+kannst du bitte den log eintrag für heute (tag :  September 2023)
+ich habe heute die letzten tests vollzogen und das neue update hochgeladen. ich habe das lernen mit der app stark verbessert indem ich einen lernmodus und einen testmodus eingeführt habe. das interface wurde überarbeitet und sollte jetzt viel übersichtlicher sein und somit zum lernerfolg der nutzer beitragen. die app läuft auch etwas besser jetzt trotz der doch schon sehr großen datenbank die mittlerweile im hintergrund arbeitet. ich habe auch einen zurück button eingeführt um zwischen den lern funktionen (vokabeln / sätze) zu wechseln wann immer der nutezr es möchte.
