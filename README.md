@@ -13,6 +13,7 @@ Die Sprachlern-App ist ein einfaches Python-Programm, das dazu dient, Vokabeln i
 - [Tastenkürzel](#tastenkürzel)
 - [100 Days of Code Techstarter](#100-days-of-code-techstarter)
 - [Lizenz](#license)
+- [Previews](#previews)
 
 ## Verwendung
 Um die Sprachlern-App zu verwenden, folge diesen Schritten:
@@ -50,4 +51,9 @@ Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es 
 ## Lizenz
 Dieses Projekt ist lizenziert unter der [MIT License](LICENSE).
 
+## Previews
+
+![preview](preview.png) ![preview-vokabeln](preview1.png) ![preview-sätze](preview2.png)
+
 **Viel Spaß beim Lernen mit der Sprachlern-App!**
+
