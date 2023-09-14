@@ -51,7 +51,3 @@ Dieses Projekt wurde als Teil des "100 Days of Code Techstarter" entwickelt. Es 
 Dieses Projekt ist lizenziert unter der [MIT License](LICENSE).
 
 **Viel Spaß beim Lernen mit der Sprachlern-App!**
-
-
-kannst du bitte den log eintrag für heute (tag :  September 2023)
-ich habe heute die letzten tests vollzogen und das neue update hochgeladen. ich habe das lernen mit der app stark verbessert indem ich einen lernmodus und einen testmodus eingeführt habe. das interface wurde überarbeitet und sollte jetzt viel übersichtlicher sein und somit zum lernerfolg der nutzer beitragen. die app läuft auch etwas besser jetzt trotz der doch schon sehr großen datenbank die mittlerweile im hintergrund arbeitet. ich habe auch einen zurück button eingeführt um zwischen den lern funktionen (vokabeln / sätze) zu wechseln wann immer der nutezr es möchte.
