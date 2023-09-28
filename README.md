@@ -31,6 +31,14 @@ Die Sprachlern-App bietet die folgenden Funktionen:
 
 - **Sätze lernen**: Du kannst den Lernmodus für Sätze starten, in dem dir zufällige Sätze angezeigt werden. Du wirst aufgefordert, die Übersetzung des gezeigten Satzes einzugeben. Wenn deine Eingabe korrekt ist, erhältst du eine Bestätigung. Andernfalls wird dir die richtige Übersetzung angezeigt.
 
+**Statistiken Anzeigen**: Du kannst dir eine kleine Statistik anzeigen lassen über die gelernten Wörter/Sätze. Diese Funktion ermöglicht es dir, den Fortschritt deines Lernprozesses zu verfolgen. Die Statistik beinhaltet Informationen zu:
+
+- **Gelernte Einheiten**: Die Anzahl der gelernten Wörter oder Sätze.
+- **Korrekte Antworten**: Die Anzahl der korrekt beantworteten Fragen oder Übungen.
+- **Fehlerhafte Antworten**: Die Anzahl der fehlerhaften Antworten oder falsch beantworteten Fragen.
+
+Mit diesen Funktionen kannst du deine Lernfortschritte verfolgen und die Statistiken visualisieren, um dein Lernverhalten besser zu verstehen.
+
 ### Zurück-Button
 - **Zurück-Button**: Du kannst den Zurück-Button verwenden, um zwischen dem Lernen von Vokabeln und dem Lernen von Sätzen zu wechseln. Dies ermöglicht es dir, deine Lernmethode anzupassen und flexibel zwischen den Modi zu wechseln.
 
@@ -53,7 +61,7 @@ Dieses Projekt ist lizenziert unter der [MIT License](LICENSE).
 
 ## Previews
 
-![preview](preview.png) ![preview-vokabeln](preview1.png) ![preview-sätze](preview2.png)
+![preview](preview.png) ![preview-vokabeln](preview1.png) ![preview-sätze](preview2.png) ![stats_1](stats_1.png) ![stats_2](stats_2.png)
 
 **Viel Spaß beim Lernen mit der Sprachlern-App!**
 

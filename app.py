@@ -1,10 +1,12 @@
 import sys
 import random
 import sqlite3
+import matplotlib.pyplot as plt
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit, QMessageBox
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import Qt
 
+conn = sqlite3.connect('vocabulary.db')
 
 def get_random_word(conn):
     cursor = conn.cursor()
@@ -38,8 +40,12 @@ class LanguageLearningApp(QWidget):
         self.conn = conn
         self.learning_type = learning_type
         self.learn_mode = learn_mode
+        self.num_learned = 0
+        self.num_correct = 0
+        self.num_errors = 0
         self.init_ui()
         self.load_next_item()
+        self.update_progress_label()
 
     def init_ui(self):
         self.layout = QVBoxLayout()
@@ -79,6 +85,9 @@ class LanguageLearningApp(QWidget):
         self.mode_label = QLabel("Lernmodus")
         self.layout.addWidget(self.mode_label)
 
+        self.progress_label = QLabel()  # Add progress_label widget
+        self.layout.addWidget(self.progress_label)  # Add progress_label widget
+
         self.setLayout(self.layout)
 
     def load_next_item(self):
@@ -88,6 +97,9 @@ class LanguageLearningApp(QWidget):
         else:
             self.current_item, self.current_translation = get_random_sentence(
                 self.conn)
+
+        self.num_learned += 1  # Increment the number of items learned
+        self.update_progress_label()  # Update the progress label
 
         if self.current_item:
             self.item_label.setText(
@@ -107,14 +119,20 @@ class LanguageLearningApp(QWidget):
     def check_translation(self):
         if not self.current_item:
             return
-
+    
         user_input = self.translation_input.text()
         if check_translation_case_insensitive(user_input, self.current_translation):
             self.result_label.setText("Richtig!")
+            self.num_correct += 1
         else:
             QMessageBox.critical(self, "Falsche Antwort",
                                 f"Falsch. Die korrekte Übersetzung lautet: '{self.current_translation}'")
             self.translation_input.setFocus()
+            self.num_errors += 1
+    
+        self.update_statistics()  # Aktualisiert die Statistikdaten
+
+        self.update_progress_label()
 
     def show_solution(self):
         if self.current_translation:
@@ -129,6 +147,25 @@ class LanguageLearningApp(QWidget):
             self.show_solution_button.setDisabled(True)
         self.mode_label.setText(
             "Lernmodus" if self.learn_mode else "Testmodus")
+        
+    def get_progress(self):
+        return self.num_learned, self.num_correct
+    
+    def update_progress_label(self):
+        self.progress_label.setText(f"Gelernt: {self.num_learned} / Korrekt: {self.num_correct} / Fehler: {self.num_errors}")
+        
+    def update_statistics(self):
+        conn = sqlite3.connect('vocabulary.db')
+        cursor = conn.cursor()
+        
+        # Aktualisieren Sie die Statistikdaten in der Datenbank
+        cursor.execute('''
+            INSERT INTO statistics (learned_count, correct_count, error_count)
+            VALUES (?, ?, ?)
+        ''', (self.num_learned, self.num_correct, self.num_errors))
+        
+        conn.commit()
+        conn.close()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
@@ -143,6 +180,8 @@ class VocabularyApp(QWidget):
     def __init__(self, conn):
         super().__init__()
         self.conn = conn
+        self.current_learning_app = None
+        self.learn_mode = True
         self.init_ui()
 
     def init_ui(self):
@@ -161,7 +200,7 @@ class VocabularyApp(QWidget):
         self.quit_button.clicked.connect(self.close)
         self.layout.addWidget(self.quit_button)
 
-        self.current_learning_app = None  # Aktuelle Lern-App
+        self.current_learning_app = None
         self.back_button = QPushButton("Zurück")
         self.back_button.clicked.connect(self.show_vocabulary_selection)
         self.back_button.setDisabled(True)
@@ -169,14 +208,35 @@ class VocabularyApp(QWidget):
 
         self.learn_mode_button = QPushButton("Lernmodus wechseln")
         self.learn_mode_button.clicked.connect(self.toggle_learn_mode)
-        self.learn_mode_button.setDisabled(True)  # Disable initially
+        self.learn_mode_button.setDisabled(True)
         self.layout.addWidget(self.learn_mode_button)
 
-        self.learn_mode = True  # Start im Lernmodus
+        self.statistics_button = QPushButton("Statistik anzeigen")
+        self.statistics_button.clicked.connect(self.show_statistics)
+        self.layout.addWidget(self.statistics_button)
+        
+        self.visualize_statistics_button = QPushButton("Statistiken visualisieren")
+        self.visualize_statistics_button.clicked.connect(self.visualize_statistics)
+        self.layout.addWidget(self.visualize_statistics_button)
 
         self.setLayout(self.layout)
         self.setWindowTitle("Sprachlern-App")
         self.resize(450, 200)
+
+    def show_statistics(self):
+        conn = sqlite3.connect('vocabulary.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT learned_count, correct_count, error_count FROM statistics ORDER BY id DESC LIMIT 1')
+        row = cursor.fetchone()
+        
+        if row:
+            learned_count, correct_count, error_count = row
+            QMessageBox.information(self, "Statistik", f"Gelernt: {learned_count}\nKorrekt: {correct_count}\nFehler: {error_count}")
+        else:
+            QMessageBox.information(self, "Statistik", "Keine Statistik verfügbar.")
+        
+        conn.close()
 
     def start_learning_words(self):
         if self.current_learning_app:
@@ -215,6 +275,41 @@ class VocabularyApp(QWidget):
         self.learn_mode = not self.learn_mode
         if self.current_learning_app:
             self.current_learning_app.set_learn_mode(self.learn_mode)
+            
+    def visualize_statistics(self):
+        conn = sqlite3.connect('vocabulary.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('SELECT learned_count, correct_count, error_count FROM statistics')
+        rows = cursor.fetchall()
+        
+        if not rows:
+            QMessageBox.information(self, "Statistik", "Keine Statistik verfügbar.")
+            return
+        
+        learned_counts, correct_counts, error_counts = zip(*rows)
+        dates = range(1, len(rows) + 1)
+        
+        plt.figure(figsize=(10, 6))
+        
+        # Gelernt-Kurve
+        plt.plot(dates, learned_counts, label="Gelernt", marker='o', linewidth=10, color='#1f77b4ff', linestyle='-')
+        
+        # Korrekt-Kurve
+        plt.plot(dates, correct_counts, label="Korrekt", marker='D', markersize=8, color='#55aa00ff', linestyle='-')
+        
+        # Fehler-Kurve
+        plt.plot(dates, error_counts, label="Fehler", marker='o', markersize=8, color='#ff0000ff', linestyle='--')
+        
+        plt.xlabel('Lernversuche')
+        plt.ylabel('Anzahl')
+        plt.title('Statistikverlauf')
+        plt.legend()
+        plt.grid(True)
+        
+        plt.show()
+        
+        conn.close()
 
 
 def main():
@@ -223,7 +318,6 @@ def main():
     vocab_app = VocabularyApp(conn)
     vocab_app.show()
     sys.exit(app.exec_())
-
 
 if __name__ == "__main__":
     main()
