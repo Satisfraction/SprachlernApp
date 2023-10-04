@@ -6,33 +6,15 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLa
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import Qt
 
-conn = sqlite3.connect('vocabulary.db')
+class Word:
+    def __init__(self, deutsch, englisch):
+        self.deutsch = deutsch
+        self.englisch = englisch
 
-def get_random_word(conn):
-    cursor = conn.cursor()
-    cursor.execute(
-        'SELECT deutsch, englisch FROM words ORDER BY RANDOM() LIMIT 1')
-    row = cursor.fetchone()
-    if row:
-        return row
-    else:
-        return None, None
-
-
-def get_random_sentence(conn):
-    cursor = conn.cursor()
-    cursor.execute(
-        'SELECT deutsch, englisch FROM sentences ORDER BY RANDOM() LIMIT 1')
-    row = cursor.fetchone()
-    if row:
-        return row
-    else:
-        return None, None
-
-
-def check_translation_case_insensitive(user_input, correct_translation):
-    return user_input.lower() == correct_translation.lower()
-
+class Sentence:
+    def __init__(self, deutsch, englisch):
+        self.deutsch = deutsch
+        self.englisch = englisch
 
 class LanguageLearningApp(QWidget):
     def __init__(self, conn, learning_type, learn_mode=False):
@@ -85,59 +67,76 @@ class LanguageLearningApp(QWidget):
         self.mode_label = QLabel("Lernmodus")
         self.layout.addWidget(self.mode_label)
 
-        self.progress_label = QLabel()  # Add progress_label widget
-        self.layout.addWidget(self.progress_label)  # Add progress_label widget
+        self.progress_label = QLabel()
+        self.layout.addWidget(self.progress_label)
 
         self.setLayout(self.layout)
 
     def load_next_item(self):
         if self.learning_type == "words":
-            self.current_item, self.current_translation = get_random_word(
-                self.conn)
+            self.current_item = self.get_random_word()
         else:
-            self.current_item, self.current_translation = get_random_sentence(
-                self.conn)
+            self.current_item = self.get_random_sentence()
 
-        self.num_learned += 1  # Increment the number of items learned
-        self.update_progress_label()  # Update the progress label
+        self.num_learned += 1
+        self.update_progress_label()
 
         if self.current_item:
             self.item_label.setText(
-                f"Übersetze: '{self.current_item}' ins Englische:")
+                f"Übersetze: '{self.current_item.deutsch}' ins Englische:")
             self.translation_input.clear()
             self.result_label.clear()
             if self.learn_mode:
                 self.show_solution_button.setDisabled(False)
-            else:
-                self.show_solution_button.setDisabled(True)
-            self.mode_label.setText(
-                "Lernmodus" if self.learn_mode else "Testmodus")
         else:
             self.item_label.setText("Keine Elemente verfügbar.")
             self.show_solution_button.setDisabled(True)
+
+    def get_random_word(self):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            'SELECT deutsch, englisch FROM words ORDER BY RANDOM() LIMIT 1')
+        row = cursor.fetchone()
+        if row:
+            return Word(*row)
+        else:
+            return None
+
+    def get_random_sentence(self):
+        cursor = self.conn.cursor()
+        cursor.execute(
+            'SELECT deutsch, englisch FROM sentences ORDER BY RANDOM() LIMIT 1')
+        row = cursor.fetchone()
+        if row:
+            return Sentence(*row)
+        else:
+            return None
 
     def check_translation(self):
         if not self.current_item:
             return
     
         user_input = self.translation_input.text()
-        if check_translation_case_insensitive(user_input, self.current_translation):
+        if self.check_translation_case_insensitive(user_input, self.current_item.englisch):
             self.result_label.setText("Richtig!")
             self.num_correct += 1
         else:
             QMessageBox.critical(self, "Falsche Antwort",
-                                f"Falsch. Die korrekte Übersetzung lautet: '{self.current_translation}'")
+                                f"Falsch. Die korrekte Übersetzung lautet: '{self.current_item.englisch}'")
             self.translation_input.setFocus()
             self.num_errors += 1
     
-        self.update_statistics()  # Aktualisiert die Statistikdaten
+        self.update_statistics()
 
         self.update_progress_label()
 
+    def check_translation_case_insensitive(self, user_input, correct_translation):
+        return user_input.lower() == correct_translation.lower()
+
     def show_solution(self):
-        if self.current_translation:
+        if self.current_item:
             self.result_label.setText(
-                f"Die richtige Übersetzung lautet: '{self.current_translation}'")
+                f"Die richtige Übersetzung lautet: '{self.current_item.englisch}'")
 
     def set_learn_mode(self, learn_mode):
         self.learn_mode = learn_mode
@@ -158,7 +157,6 @@ class LanguageLearningApp(QWidget):
         conn = sqlite3.connect('vocabulary.db')
         cursor = conn.cursor()
         
-        # Aktualisieren Sie die Statistikdaten in der Datenbank
         cursor.execute('''
             INSERT INTO statistics (learned_count, correct_count, error_count)
             VALUES (?, ?, ?)
@@ -169,12 +167,9 @@ class LanguageLearningApp(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            # Überprüfen, wenn Enter-Taste gedrückt wird
             self.check_translation()
         elif event.key() == Qt.Key_F2:
-            # Nächstes Element laden, wenn F2-Taste gedrückt wird
             self.load_next_item()
-
 
 class VocabularyApp(QWidget):
     def __init__(self, conn):
@@ -248,7 +243,7 @@ class VocabularyApp(QWidget):
         self.learn_words_button.setDisabled(True)
         self.learn_sentences_button.setDisabled(True)
         self.back_button.setDisabled(False)
-        self.learn_mode_button.setDisabled(False)  # Enable after learning method selection
+        self.learn_mode_button.setDisabled(False)
 
     def start_learning_sentences(self):
         if self.current_learning_app:
@@ -260,7 +255,7 @@ class VocabularyApp(QWidget):
         self.learn_words_button.setDisabled(True)
         self.learn_sentences_button.setDisabled(True)
         self.back_button.setDisabled(False)
-        self.learn_mode_button.setDisabled(False)  # Enable after learning method selection
+        self.learn_mode_button.setDisabled(False)
 
     def show_vocabulary_selection(self):
         if self.current_learning_app:
@@ -269,7 +264,7 @@ class VocabularyApp(QWidget):
         self.learn_words_button.setDisabled(False)
         self.learn_sentences_button.setDisabled(False)
         self.back_button.setDisabled(True)
-        self.learn_mode_button.setDisabled(True)  # Disable after going back to selection
+        self.learn_mode_button.setDisabled(True)
 
     def toggle_learn_mode(self):
         self.learn_mode = not self.learn_mode
@@ -292,13 +287,8 @@ class VocabularyApp(QWidget):
         
         plt.figure(figsize=(10, 6))
         
-        # Gelernt-Kurve
         plt.plot(dates, learned_counts, label="Gelernt", marker='o', linewidth=10, color='#1f77b4ff', linestyle='-')
-        
-        # Korrekt-Kurve
         plt.plot(dates, correct_counts, label="Korrekt", marker='D', markersize=8, color='#55aa00ff', linestyle='-')
-        
-        # Fehler-Kurve
         plt.plot(dates, error_counts, label="Fehler", marker='o', markersize=8, color='#ff0000ff', linestyle='--')
         
         plt.xlabel('Lernversuche')
@@ -310,7 +300,6 @@ class VocabularyApp(QWidget):
         plt.show()
         
         conn.close()
-
 
 def main():
     app = QApplication(sys.argv)
